@@ -175,21 +175,24 @@ const PointCard = ({ point, index }: { point: HelpPoint; index: number }) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.08, duration: 0.5 }}
-      className={`p-6 rounded-[2rem] border relative overflow-hidden group hover:bg-neutral-900/40 transition-all duration-500 ${styleClass}`}
+      className={`flex flex-col justify-between p-6 rounded-[2rem] border relative overflow-hidden group hover:bg-neutral-900/40 transition-all duration-500 ${styleClass}`}
     >
-      <div className="flex items-start gap-4 mb-4">
-        <div className={`p-3 rounded-2xl bg-black/40 border border-white/5 group-hover:scale-110 transition-transform duration-500`}>
-          <Icon icon={point.icon} className="w-5 h-5" />
-        </div>
-        <h4 className="text-sm font-black uppercase tracking-wider leading-tight text-white/90 pt-1 group-hover:text-white transition-colors">
-          {point.title}
-        </h4>
-      </div>
+        <div>
+            <div className="flex items-start gap-4 mb-4">
+                <div className={`p-3 rounded-2xl bg-black/40 border border-white/5 group-hover:scale-110 transition-transform duration-500`}>
+                    <Icon icon={point.icon} className="w-5 h-5" />
+                </div>
+                <h4 className="text-sm font-black uppercase tracking-wider leading-tight text-white/90 pt-1 group-hover:text-white transition-colors">
+                    {point.title}
+                </h4>
+            </div>
       
-      <div 
-        className="text-sm text-neutral-400 leading-relaxed font-medium space-y-2 whitespace-pre-wrap"
-        dangerouslySetInnerHTML={{ __html: point.content }}
-      />
+            <div 
+                className="text-sm text-neutral-400 leading-relaxed font-medium space-y-2 whitespace-pre-wrap"
+                dangerouslySetInnerHTML={{ __html: point.content }}
+            />
+        </div>
+      
 
       {point.details && (
         <motion.div 

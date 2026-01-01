@@ -3,21 +3,21 @@ import { AnimatePresence } from 'framer-motion';
 import { Icon } from '@iconify/react';
 
 // Hooks
-import { useSessions } from './src/hooks/useSessions';
-import { useTimer } from './src/hooks/useTimer';
+import { useSessions } from '@/src/hooks/useSessions';
+import { useTimer } from '@/src/hooks/useTimer';
 
 // Services
-import { exportService } from './src/services/exportService';
+import { exportService } from '@/src/services/exportService';
 
 // Components
-import { Header } from './src/components/layout/Header';
-import { FlowPanel } from './src/components/features/Session/FlowPanel';
-import { ShippingPanel } from './src/components/features/Session/ShippingPanel';
-import { Timeline } from './src/components/features/Timeline/Timeline';
-import { BottleneckAnalysis } from './src/components/features/Analytics/BottleneckAnalysis';
-import { EndSessionDialog } from './src/components/ui/EndSessionDialog';
-import { ContextMenu } from './src/components/ui/ContextMenu';
-import { HelpModal } from './src/components/ui/HelpModal';
+import { Header } from '@/src/components/layout/Header';
+import { FlowPanel } from '@/src/components/features/Session/FlowPanel';
+import { ShippingPanel } from '@/src/components/features/Session/ShippingPanel';
+import { Timeline } from '@/src/components/features/Timeline/Timeline';
+import { BottleneckAnalysis } from '@/src/components/features/Analytics/BottleneckAnalysis';
+import { EndSessionDialog } from '@/src/components/ui/EndSessionDialog';
+import { ContextMenu } from '@/src/components/ui/ContextMenu';
+import { HelpModal } from '@/src/components/ui/HelpModal';
 
 const App: React.FC = () => {
   const {

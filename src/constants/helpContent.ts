@@ -33,14 +33,14 @@ export const helpContent: HelpSection[] = [
         icon: "lucide:brain-circuit",
         color: "purple",
         content: "Before you code, write <strong>ONE sentence:</strong>\n<em>'When this session ends, X will work.'</em>",
-        details: "📌 <strong>Critical:</strong> Vague goals (e.g., 'work on auth') block deep flow. Success must be binary."
+        details: "<strong>Critical:</strong> Vague goals (e.g., 'work on auth') block deep flow. Success must be binary."
       },
       {
-        title: "3️⃣ Biologically aligned blocks",
+        title: "Biologically aligned blocks",
         icon: "lucide:timer",
         color: "orange",
         content: "<strong>Ultradian rhythm:</strong> Focus best in <strong>90–120 min</strong> cycles. Flow starts 15–25 min in.",
-        details: "🚫 <strong>Pomodoro (25m)</strong> is bad for deep flow, good for beginners. Aim for 90m deep work + 15m full break."
+        details: "<strong>Pomodoro (25m)</strong> is bad for deep flow, good for beginners. Aim for 90m deep work + 15m full break."
       },
       {
         title: "Adjustable difficulty",
@@ -62,7 +62,7 @@ export const helpContent: HelpSection[] = [
     title: "Analyze Your Shipping Speed",
     points: [
       {
-        title: "1️⃣ Define 'shipping' clearly",
+        title: "1Define 'shipping' clearly",
         icon: "lucide:package-check",
         color: "blue",
         content: "<strong>Shipping ≠ coding.</strong> Shipping = usable output.",
@@ -73,7 +73,7 @@ export const helpContent: HelpSection[] = [
         icon: "lucide:activity",
         color: "emerald",
         content: "Lead Time = Time from <strong>'Started'</strong> → <strong>'Shipped'</strong>.\nTrack this for: Features, Bugs, Refactors.",
-        details: "📊 Standard DORA metric used by high-performance engineering teams."
+        details: "Standard DORA metric used by high-performance engineering teams."
       },
       {
         title: "The 4 Bottlenecks",
