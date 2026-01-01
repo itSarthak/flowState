@@ -1,20 +1,59 @@
 <div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+<h1>Flow and Shipping Dashboard</h1>
 </div>
 
-# Run and deploy your AI Studio app
+## Project Summary
 
-This contains everything you need to run your app locally.
+The Flow and Shipping Dashboard provides a professional interface for monitoring software engineering performance. It focuses on the dual metrics of deep work flow and delivery velocity. By tracking focus sessions and identifying operational bottlenecks, the tool enables engineers to refine their daily workflows for maximum efficiency.
 
-View your app in AI Studio: https://ai.studio/apps/drive/1FxC1jfQI__vSpUegVGy6D3FS3blOBvwY
+## Core Use Cases
 
-## Run Locally
+### Quantifying Focus Quality
 
-**Prerequisites:**  Node.js
+Engineers can initiate flow sessions to track their periods of deep concentration. Each session is recorded with a qualitative score to evaluate focus depth over time.
 
+### Analyzing Engineering Bottlenecks
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+The system provides a statistical distribution of time across critical development phases:
+
+1. Thinking and Architecture
+2. Active Implementation
+3. Debugging and Testing
+4. Waiting for External Feedback
+
+### Visualizing Shipping Velocity
+
+The dashboard presents a clear timeline of completed tasks and active work periods. This visibility helps in maintaining a consistent delivery cadence.
+
+### Applying Flow Science
+
+A structured help system offers research based insights into entering and maintaining flow states. It covers environmental factors and biological rhythms relevant to engineering performance.
+
+## Essential Features
+
+1. Real time focus session timer
+2. Historical shipping logs and velocity metrics
+3. Integrated bottleneck distribution analysis
+4. Detailed timeline of development progress
+5. Professional interface with high fidelity transitions
+
+## Installation and Setup
+
+### System Requirements
+
+You must have Node.js available on your local system.
+
+### Deployment Steps
+
+1. Install all required dependencies:
+   npm install
+
+2. Configure your environment variables:
+   Provide a valid GEMINI_API_KEY in the local environment file.
+
+3. Start the development server:
+   npm run dev
+
+## Technical Architecture
+
+This application is built using the React framework and TypeScript. It utilizes Framer Motion for animations and Tailwind CSS for styling. All session data is stored locally to maintain privacy and ensure high performance interaction.
