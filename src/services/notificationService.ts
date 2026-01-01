@@ -1,0 +1,20 @@
+export const NOTIFICATION_SOUND_URL = 'https://actions.google.com/sounds/v1/alarms/beep_short.ogg';
+
+export const notificationService = {
+  requestPermission: () => {
+    if (Notification.permission === 'default') {
+      Notification.requestPermission();
+    }
+  },
+  trigger: (goal: string, minutes: number) => {
+    if (Notification.permission === 'granted') {
+      new Notification('Flow Session Reminder', {
+        body: `Your session "${goal}" has been active for ${minutes} minutes. Don't forget to end it if you are done!`,
+        icon: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'
+      });
+    }
+    // Play sound
+    const audio = new Audio(NOTIFICATION_SOUND_URL);
+    audio.play().catch(e => console.log("Audio play blocked", e));
+  }
+};
