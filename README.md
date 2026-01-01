@@ -48,10 +48,7 @@ You must have Node.js available on your local system.
 1. Install all required dependencies:
    npm install
 
-2. Configure your environment variables:
-   Provide a valid GEMINI_API_KEY in the local environment file.
-
-3. Start the development server:
+2. Start the development server:
    npm run dev
 
 ## Technical Architecture
