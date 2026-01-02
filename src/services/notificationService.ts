@@ -24,7 +24,7 @@ export const notificationService = {
     };
 
     playSound();
-    setTimeout(playSound, 500);
-    setTimeout(playSound, 1000);
+    setTimeout(playSound, 200);
+    setTimeout(playSound, 400);
   }
 };

@@ -103,12 +103,27 @@ export const Infographics: React.FC<InfographicsProps> = ({ sessions, filter, se
       ? Math.round((shippedCount / filteredSessions.length) * 100)
       : 0;
 
+    // --- 3. Deep Stats Calculation ---
+    // Best Day
+    let bestDay = { label: '-', value: 0 };
+    if (aggregatedData.length > 0) {
+      const max = aggregatedData.reduce((prev, current) => (prev.value > current.value) ? prev : current);
+      bestDay = max;
+    }
+
+    // Daily Average (if filter is day, it's hourly avg, if week/month it's daily avg over that period? 
+    // Actually, simple average of the chart bars is strictly correct for the visualization)
+    const average = Math.round(totalMinutes / (aggregatedData.length || 1));
+
     return {
       stats: {
         totalHours: (totalMinutes / 60).toFixed(1),
         avgScore,
         shipRate,
-        count: filteredSessions.length
+        count: filteredSessions.length,
+        bestDay,
+        average,
+        shippedCount
       },
       chartData: aggregatedData
     };
@@ -164,9 +179,36 @@ export const Infographics: React.FC<InfographicsProps> = ({ sessions, filter, se
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6">
-        <MetricCard icon="lucide:clock" label="Focus Time" value={`${stats.totalHours}h`} subLabel="In selected period" />
-        <MetricCard icon="lucide:zap" label="Avg Quality" value={stats.avgScore} subLabel="Flow Score" />
-        <MetricCard icon="lucide:package-check" label="Ship Rate" value={`${stats.shipRate}%`} subLabel="Completion" />
+        <MetricCard 
+          icon="lucide:clock" 
+          label="Focus Time" 
+          value={`${stats.totalHours}h`} 
+          subLabel="In selected period" 
+          tooltip={
+            <div className="space-y-1">
+              <div className="flex justify-between gap-4"><span className="text-neutral-500">Average:</span> <span className="text-neutral-200 mono">{stats.average}m / bucket</span></div>
+              <div className="flex justify-between gap-4"><span className="text-neutral-500">Best:</span> <span className="text-neutral-200 mono">{stats.bestDay.value}m ({stats.bestDay.label})</span></div>
+            </div>
+          }
+        />
+        <MetricCard 
+          icon="lucide:zap" 
+          label="Avg Quality" 
+          value={stats.avgScore} 
+          subLabel="Flow Score" 
+          tooltip={
+             <div className="flex justify-between gap-4"><span className="text-neutral-500">Sessions recorded:</span> <span className="text-neutral-200 mono">{stats.count}</span></div>
+          }
+        />
+        <MetricCard 
+          icon="lucide:package-check" 
+          label="Ship Rate" 
+          value={`${stats.shipRate}%`} 
+          subLabel="Completion" 
+          tooltip={
+             <div className="flex justify-between gap-4"><span className="text-neutral-500">Total Shipped:</span> <span className="text-neutral-200 mono">{stats.shippedCount} items</span></div>
+          }
+        />
       </div>
 
       <div className="h-64 w-full bg-neutral-950/20 rounded-xl border border-neutral-800/50 p-4 relative">
@@ -228,8 +270,8 @@ export const Infographics: React.FC<InfographicsProps> = ({ sessions, filter, se
   );
 };
 
-const MetricCard = ({ icon, label, value, subLabel }: { icon: string; label: string; value: string; subLabel: string }) => (
-  <div className="p-4 rounded-lg bg-neutral-900/40 border border-neutral-800 space-y-2">
+const MetricCard = ({ icon, label, value, subLabel, tooltip }: { icon: string; label: string; value: string; subLabel: string; tooltip?: React.ReactNode }) => (
+  <div className="p-4 rounded-lg bg-neutral-900/40 border border-neutral-800 space-y-2 relative group cursor-help">
     <div className="flex items-center gap-2">
       <Icon icon={icon} className="w-3.5 h-3.5 text-neutral-500" />
       <span className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">{label}</span>
@@ -238,5 +280,12 @@ const MetricCard = ({ icon, label, value, subLabel }: { icon: string; label: str
       <span className="text-2xl font-bold mono text-neutral-200">{value}</span>
       <span className="text-[10px] text-neutral-600 font-medium">{subLabel}</span>
     </div>
+
+    {tooltip && (
+      <div className="absolute top-full left-0 mt-2 w-max min-w-[160px] p-3 bg-neutral-900 border border-neutral-800 rounded-lg shadow-xl opacity-0 group-hover:opacity-100 transition-opacity z-20 pointer-events-none">
+        <div className="text-[10px] uppercase font-bold text-neutral-600 mb-2 border-b border-neutral-800 pb-1">Details</div>
+        <div className="text-xs text-neutral-300">{tooltip}</div>
+      </div>
+    )}
   </div>
 );

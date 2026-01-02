@@ -20,6 +20,7 @@ import { Infographics } from '@/src/components/features/Analytics/Infographics';
 import { EndSessionDialog } from '@/src/components/ui/EndSessionDialog';
 import { ContextMenu } from '@/src/components/ui/ContextMenu';
 import { HelpModal } from '@/src/components/ui/HelpModal';
+import { WisdomModal } from '@/src/components/features/Wisdom/WisdomModal';
 
 import { AnalyticFilter } from '@/src/components/features/Analytics/Infographics';
 
@@ -38,6 +39,7 @@ const App: React.FC = () => {
   const { activeDurationMinutes } = useTimer(currentSession, notificationInterval);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
+  const [isWisdomOpen, setIsWisdomOpen] = useState(false);
   const [contextMenu, setContextMenu] = useState<{ x: number, y: number } | null>(null);
 
   // Tab Bar Title and Emoji logic
@@ -66,6 +68,11 @@ const App: React.FC = () => {
       label: currentSession ? 'End Flow Session' : 'Start Flow Session',
       icon: <Icon icon={currentSession ? "lucide:square" : "lucide:play"} className="w-4 h-4" />,
       onClick: () => currentSession ? setIsDialogOpen(true) : document.querySelector('input')?.focus()
+    },
+    {
+      label: 'Get Wisdom',
+      icon: <Icon icon="lucide:sparkles" className="w-4 h-4" />,
+      onClick: () => setIsWisdomOpen(true)
     },
     {
       label: 'Help / How to use',
@@ -147,6 +154,12 @@ const App: React.FC = () => {
           items={menuItems}
         />
       )}
+      
+      <WisdomModal 
+        isOpen={isWisdomOpen} 
+        onOpen={() => setIsWisdomOpen(true)} 
+        onClose={() => setIsWisdomOpen(false)} 
+      />
     </div>
   );
 };
