@@ -62,7 +62,7 @@ export const helpContent: HelpSection[] = [
     title: "Analyze Your Shipping Speed",
     points: [
       {
-        title: "1Define 'shipping' clearly",
+        title: "Define 'shipping' clearly",
         icon: "lucide:package-check",
         color: "blue",
         content: "<strong>Shipping ≠ coding.</strong> Shipping = usable output.",

@@ -78,23 +78,23 @@ const TimelineItem = ({ session, onDelete }: { session: FlowSession; onDelete: (
         className="bg-neutral-900/40 border border-neutral-800 rounded-xl overflow-hidden hover:border-neutral-700 transition-colors cursor-pointer"
         onClick={() => setIsExpanded(!isExpanded)}
       >
-        <div className="p-4 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-4 flex-1 min-w-0">
-            <div className={`w-2 h-2 rounded-full ${session.shipped ? 'bg-blue-500' : 'bg-neutral-700'}`} />
-            <span className="text-neutral-200 font-medium truncate flex-1">{session.goal}</span>
+        <div className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 md:gap-4">
+          <div className="flex items-center gap-3 md:gap-4 flex-1 min-w-0">
+            <div className={`w-2 h-2 rounded-full shrink-0 ${session.shipped ? 'bg-blue-500' : 'bg-neutral-700'}`} />
+            <span className="text-sm md:text-base text-neutral-200 font-medium truncate flex-1">{session.goal}</span>
           </div>
           
-          <div className="flex items-center gap-6 text-sm">
+          <div className="flex items-center justify-between sm:justify-end gap-4 md:gap-6 text-sm">
             <div className="flex flex-col items-end">
-               <span className="mono text-neutral-400">{session.leadTimeMinutes}m</span>
-               <span className="text-[10px] text-neutral-600 uppercase">Duration</span>
+               <span className="mono text-xs md:text-sm text-neutral-400">{session.leadTimeMinutes}m</span>
+               <span className="text-[9px] md:text-[10px] text-neutral-600 uppercase">Duration</span>
             </div>
             <div className="flex flex-col items-end">
-               <span className="mono text-neutral-400">{session.flowScore}/5</span>
-               <span className="text-[10px] text-neutral-600 uppercase">Flow</span>
+               <span className="mono text-xs md:text-sm text-neutral-400">{session.flowScore}/5</span>
+               <span className="text-[9px] md:text-[10px] text-neutral-600 uppercase">Flow</span>
             </div>
             {session.shipped && (
-              <Icon icon="lucide:check-circle-2" className="w-4 h-4 text-blue-500/80" />
+              <Icon icon="lucide:check-circle-2" className="w-4 h-4 md:w-5 md:h-5 text-blue-500/80" />
             )}
           </div>
         </div>

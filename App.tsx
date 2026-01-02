@@ -15,6 +15,7 @@ import { FlowPanel } from '@/src/components/features/Session/FlowPanel';
 import { ShippingPanel } from '@/src/components/features/Session/ShippingPanel';
 import { Timeline } from '@/src/components/features/Timeline/Timeline';
 import { BottleneckAnalysis } from '@/src/components/features/Analytics/BottleneckAnalysis';
+import { ActivityHeatmap } from '@/src/components/features/Analytics/ActivityHeatmap';
 import { EndSessionDialog } from '@/src/components/ui/EndSessionDialog';
 import { ContextMenu } from '@/src/components/ui/ContextMenu';
 import { HelpModal } from '@/src/components/ui/HelpModal';
@@ -78,7 +79,7 @@ const App: React.FC = () => {
         onShowHelp={() => setIsHelpOpen(true)}
       />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mt-8 md:mt-12">
         <FlowPanel 
           isActive={!!currentSession} 
           duration={activeDurationMinutes} 
@@ -87,11 +88,15 @@ const App: React.FC = () => {
         <ShippingPanel sessions={sessions} />
       </div>
 
-      <div className="mt-12">
+      <div className="mt-8 md:mt-12">
+        <ActivityHeatmap sessions={sessions} />
+      </div>
+
+      <div className="mt-8 md:mt-12">
         <Timeline sessions={sessions} onDelete={handleDeleteSession} />
       </div>
 
-      <div className="mt-12 pb-24">
+      <div className="mt-8 md:mt-12 pb-24">
         <BottleneckAnalysis sessions={sessions} />
       </div>
 
