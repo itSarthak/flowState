@@ -23,7 +23,13 @@ export const EditSessionModal: React.FC<EditSessionModalProps> = ({
   const [isTagMenuOpen, setIsTagMenuOpen] = useState(false);
   const tagInputRef = useRef<HTMLInputElement>(null);
 
-  const activeTags = tags.filter(t => t.status === 'active');
+  // Available tags: Active tags + Completed tags if session was during their active period
+  const availableTags = tags.filter(t => {
+    if (t.status === 'active') return true;
+    // For completed tags, allow if session started before or during the tag's life (rough check)
+    // We use session.startTime <= tag.completedAt
+    return t.completedAt && session.startTime <= t.completedAt;
+  });
 
   useEffect(() => {
      if (session.tagId) {
@@ -39,7 +45,7 @@ export const EditSessionModal: React.FC<EditSessionModalProps> = ({
     const cleanTagName = tagName.trim();
 
     if (cleanTagName) {
-       const existing = activeTags.find(t => t.name.toLowerCase() === cleanTagName.toLowerCase());
+       const existing = availableTags.find(t => t.name.toLowerCase() === cleanTagName.toLowerCase());
        if (existing) {
           tagId = existing.id;
        } else {
@@ -109,9 +115,10 @@ export const EditSessionModal: React.FC<EditSessionModalProps> = ({
                      initial={{ opacity: 0, y: 5 }}
                      animate={{ opacity: 1, y: 0 }}
                      exit={{ opacity: 0, y: 5 }}
-                     className="absolute top-full left-0 mt-1 w-full max-h-48 overflow-y-auto bg-neutral-900 border border-neutral-800 rounded-lg shadow-xl py-1 z-50 no-scrollbar"
+                     className="absolute top-full left-0 mt-1 w-full max-h-48 overflow-y-auto bg-neutral-900 border border-neutral-800 rounded-lg shadow-xl py-1 z-50 scroller"
+                     style={{ maxHeight: '200px' }}
                    >
-                     {activeTags.filter(t => t.name.toLowerCase().includes(tagName.toLowerCase())).map(t => (
+                     {availableTags.filter(t => t.name.toLowerCase().includes(tagName.toLowerCase())).map(t => (
                        <button
                          key={t.id}
                          onClick={() => setTagName(t.name)}
@@ -120,7 +127,7 @@ export const EditSessionModal: React.FC<EditSessionModalProps> = ({
                          <span>{t.name}</span>
                        </button>
                      ))}
-                     {tagName && !activeTags.some(t => t.name.toLowerCase() === tagName.toLowerCase()) && (
+                     {tagName && !availableTags.some(t => t.name.toLowerCase() === tagName.toLowerCase()) && (
                        <div className="px-3 py-2 text-xs text-neutral-500 border-t border-neutral-800/50 italic">
                          Create "{tagName}"
                        </div>

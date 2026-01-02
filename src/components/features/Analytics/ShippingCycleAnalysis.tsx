@@ -40,15 +40,29 @@ export const ShippingCycleAnalysis: React.FC<ShippingCycleAnalysisProps> = ({ se
     return b.createdAt - a.createdAt;
   });
 
+  const [showAll, setShowAll] = useState(false);
+  const displayedTags = showAll ? sortedTags : sortedTags.slice(0, 3);
+
   return (
     <div className="space-y-4">
-      <div className="flex items-center gap-2 mb-4">
-        <Icon icon="lucide:container" className="text-neutral-400 w-5 h-5" />
-        <h2 className="text-sm font-bold uppercase tracking-widest text-neutral-300">Shipping Cycles</h2>
+      <div className="flex items-center justify-between gap-2 mb-4">
+        <div className="flex items-center gap-2">
+           <Icon icon="lucide:container" className="text-neutral-400 w-5 h-5" />
+           <h2 className="text-sm font-bold uppercase tracking-widest text-neutral-300">Shipping Cycles</h2>
+        </div>
+        {tags.length > 3 && (
+           <button 
+             onClick={() => setShowAll(!showAll)}
+             className="text-[10px] font-bold uppercase tracking-widest text-neutral-500 hover:text-neutral-300 transition-colors flex items-center gap-1"
+           >
+             {showAll ? 'Show Less' : `Show ${tags.length - 3} More`}
+             <Icon icon={showAll ? "lucide:chevron-up" : "lucide:chevron-down"} className="w-3 h-3" />
+           </button>
+        )}
       </div>
 
       <div className="grid gap-3">
-        {sortedTags.map(tag => {
+        {displayedTags.map(tag => {
           const stats = getTagStats(tag);
           const isExpanded = expandedTagId === tag.id;
 
@@ -75,7 +89,7 @@ export const ShippingCycleAnalysis: React.FC<ShippingCycleAnalysisProps> = ({ se
                     <div className="flex items-center gap-3 text-[10px] text-neutral-500 uppercase tracking-wider font-medium mt-1">
                       <span>{stats.totalSessions} Sessions</span>
                       <span>•</span>
-                      <span>{Math.round(stats.totalMinutes / 60)}h {stats.totalMinutes % 60}m</span>
+                      <span>{Math.floor(stats.totalMinutes / 60)}h {stats.totalMinutes % 60}m</span>
                     </div>
                   </div>
                 </div>

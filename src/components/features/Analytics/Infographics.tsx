@@ -29,7 +29,10 @@ export const Infographics: React.FC<InfographicsProps> = ({ sessions, filter, se
 
     // --- 1. Aggregation Logic ---
     if (filter === 'day') {
-      // ... (Day logic)
+      // Last 7 Days
+      const sevenDaysAgo = subDays(now, 7);
+      filteredSessions = sessions.filter(s => new Date(s.endTime).getTime() >= sevenDaysAgo.getTime()); // [FIX]
+
       for (let i = 6; i >= 0; i--) {
         const d = subDays(now, i);
         const label = format(d, 'dd/MM/yy');
