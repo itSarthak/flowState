@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useRef, useEffect } from 'react';
 import { FlowSession } from '../../../types';
 import { motion } from 'framer-motion';
 
@@ -9,6 +9,13 @@ interface ActivityHeatmapProps {
 export const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({ sessions }) => {
   const days = 365;
   const now = new Date();
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollLeft = scrollRef.current.scrollWidth;
+    }
+  }, []);
   
   const heatmapData = useMemo(() => {
     const data: Record<string, number> = {};
@@ -27,11 +34,6 @@ export const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({ sessions }) =>
       const minutes = data[dateKey] || 0;
       
       // Intensity mapping (0-4)
-      // 0: 0 min
-      // 1: 1-60 min
-      // 2: 61-120 min
-      // 3: 121-240 min
-      // 4: >240 min
       let intensity = 0;
       if (minutes > 0 && minutes <= 60) intensity = 1;
       else if (minutes > 60 && minutes <= 120) intensity = 2;
@@ -40,6 +42,8 @@ export const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({ sessions }) =>
 
       return {
         date: dateKey,
+        dayOfMonth: date.getDate(),
+        month: date.getMonth(),
         minutes,
         intensity
       };
@@ -69,7 +73,11 @@ export const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({ sessions }) =>
         </div>
       </div>
 
-      <div className="relative overflow-x-auto custom-scrollbar pb-2">
+      <div 
+        ref={scrollRef}
+        className="relative overflow-x-auto no-scrollbar pb-2"
+        style={{ scrollBehavior: 'smooth' }}
+      >
         <div 
           className="grid grid-flow-col gap-2 md:gap-1.5"
           style={{ 
@@ -94,7 +102,7 @@ export const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({ sessions }) =>
       </div>
       
       <div className="flex justify-between text-[10px] text-neutral-600 font-bold uppercase tracking-tight">
-        <span>Jan 2025</span>
+        <span>{new Date(new Date().setDate(now.getDate() - 365)).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}</span>
         <span>Today</span>
       </div>
     </div>

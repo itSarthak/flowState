@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { Icon } from '@iconify/react';
 
@@ -16,6 +16,7 @@ import { ShippingPanel } from '@/src/components/features/Session/ShippingPanel';
 import { Timeline } from '@/src/components/features/Timeline/Timeline';
 import { BottleneckAnalysis } from '@/src/components/features/Analytics/BottleneckAnalysis';
 import { ActivityHeatmap } from '@/src/components/features/Analytics/ActivityHeatmap';
+import { Infographics } from '@/src/components/features/Analytics/Infographics';
 import { EndSessionDialog } from '@/src/components/ui/EndSessionDialog';
 import { ContextMenu } from '@/src/components/ui/ContextMenu';
 import { HelpModal } from '@/src/components/ui/HelpModal';
@@ -35,6 +36,22 @@ const App: React.FC = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [contextMenu, setContextMenu] = useState<{ x: number, y: number } | null>(null);
+
+  // Tab Bar Title and Emoji logic
+  useEffect(() => {
+    let interval: ReturnType<typeof setInterval>;
+    
+    if (currentSession) {
+      interval = setInterval(() => {
+        const elapsed = Math.floor((Date.now() - currentSession.startTime) / 60000);
+        document.title = `▶ ${elapsed}m | ${currentSession.goal}`;
+      }, 1000);
+    } else {
+      document.title = '⏸ Flow & Shipping';
+    }
+
+    return () => clearInterval(interval);
+  }, [currentSession]);
 
   const handleGlobalContextMenu = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -93,11 +110,15 @@ const App: React.FC = () => {
       </div>
 
       <div className="mt-8 md:mt-12">
+        <BottleneckAnalysis sessions={sessions} />
+      </div>
+
+      <div className="mt-8 md:mt-12">
         <Timeline sessions={sessions} onDelete={handleDeleteSession} />
       </div>
 
       <div className="mt-8 md:mt-12 pb-24">
-        <BottleneckAnalysis sessions={sessions} />
+        <Infographics sessions={sessions} />
       </div>
 
       <AnimatePresence>

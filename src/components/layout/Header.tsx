@@ -44,7 +44,14 @@ export const Header: React.FC<HeaderProps> = ({
     });
   };
 
-  const intervals = [30, 45, 60, 75, 90, 105, 120, 135, 150];
+  const handleIntervalChange = (val: number) => {
+    onSetNotificationInterval(val);
+    import('../../services/notificationService').then(({ notificationService }) => {
+      notificationService.requestPermission();
+    });
+  };
+
+  const intervals = [1, 30, 45, 60, 75, 90, 105, 120, 135, 150];
 
   return (
     <header className="flex flex-col gap-4 md:gap-6">
@@ -57,7 +64,10 @@ export const Header: React.FC<HeaderProps> = ({
         <div className="flex items-center gap-2 md:gap-3 overflow-x-auto pb-1 md:pb-0 no-scrollbar">
           <div className="flex items-center gap-2 px-2 md:px-3 py-1.5 bg-neutral-900/50 border border-neutral-800 rounded-md text-[9px] md:text-[10px] uppercase font-bold text-neutral-500 shrink-0">
             <button 
-              onClick={handleTestNotification}
+              onClick={() => {
+                handleTestNotification();
+                handleIntervalChange(notificationInterval);
+              }}
               className="hover:text-white transition-colors flex items-center gap-1"
               title="Test Notification"
             >
@@ -66,7 +76,7 @@ export const Header: React.FC<HeaderProps> = ({
             <span className="hidden sm:inline">Alert every</span>
             <select 
               value={notificationInterval}
-              onChange={(e) => onSetNotificationInterval(parseInt(e.target.value))}
+              onChange={(e) => handleIntervalChange(parseInt(e.target.value))}
               className="bg-transparent text-neutral-300 focus:outline-none cursor-pointer hover:text-white transition-colors"
             >
               {intervals.map(i => <option key={i} value={i} className="bg-neutral-900">{i}m</option>)}
