@@ -7,11 +7,28 @@ import { ContextMenu } from '../../ui/ContextMenu';
 interface TimelineProps {
   sessions: FlowSession[];
   onDelete: (id: string) => void;
+  onEdit: (session: FlowSession) => void;
 }
 
-export const Timeline: React.FC<TimelineProps> = ({ sessions, onDelete }) => {
+import { format, isToday, isSameDay } from 'date-fns';
+
+export const Timeline: React.FC<TimelineProps> = ({ sessions, onDelete, onEdit }) => {
   const [showAll, setShowAll] = useState(false);
   const displayedSessions = showAll ? sessions : sessions.slice(0, 3);
+  
+  // Helper to render date header
+  const renderDateHeader = (date: number) => {
+    const d = new Date(date);
+    return (
+      <div className="flex items-center gap-2 py-2 mt-4 mb-2">
+        <div className="h-px bg-neutral-800 flex-1" />
+        <span className="text-[10px] uppercase font-bold text-neutral-500 tracking-widest">
+          {isToday(d) ? 'Today' : format(d, 'dd/MM/yy')}
+        </span>
+        <div className="h-px bg-neutral-800 flex-1" />
+      </div>
+    );
+  };
 
   return (
     <div className="space-y-6">
@@ -38,9 +55,16 @@ export const Timeline: React.FC<TimelineProps> = ({ sessions, onDelete }) => {
               No sessions recorded yet. Focus and ship.
             </div>
           ) : (
-            displayedSessions.map((session) => (
-              <TimelineItem key={session.id} session={session} onDelete={onDelete} />
-            ))
+            displayedSessions.map((session, index) => {
+              const showHeader = index === 0 || !isSameDay(new Date(session.endTime), new Date(displayedSessions[index - 1].endTime));
+              
+              return (
+                <React.Fragment key={session.id}>
+                  {showHeader && renderDateHeader(session.endTime)}
+                  <TimelineItem session={session} onDelete={onDelete} onEdit={onEdit} />
+                </React.Fragment>
+              );
+            })
           )}
         </AnimatePresence>
       </div>
@@ -48,7 +72,7 @@ export const Timeline: React.FC<TimelineProps> = ({ sessions, onDelete }) => {
   );
 };
 
-const TimelineItem = ({ session, onDelete }: { session: FlowSession; onDelete: (id: string) => void }) => {
+const TimelineItem = ({ session, onDelete, onEdit }: { session: FlowSession; onDelete: (id: string) => void; onEdit: (session: FlowSession) => void }) => {
   const [isExpanded, setIsExpanded] = React.useState(false);
   const [contextMenu, setContextMenu] = useState<{ x: number, y: number } | null>(null);
 
@@ -59,6 +83,11 @@ const TimelineItem = ({ session, onDelete }: { session: FlowSession; onDelete: (
   };
 
   const menuItems = [
+    {
+      label: 'Edit Session',
+      icon: <Icon icon="lucide:edit-3" className="w-4 h-4" />,
+      onClick: () => onEdit(session),
+    },
     {
       label: 'Delete Session',
       icon: <Icon icon="lucide:trash-2" className="w-4 h-4" />,

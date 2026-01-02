@@ -1,11 +1,14 @@
 
-import React, { useState, useEffect } from 'react';
-import { CurrentSession } from '../../types';
+import React, { useState, useEffect, useRef } from 'react';
+import { CurrentSession, Tag } from '../../types';
 import { Icon } from '@iconify/react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface HeaderProps {
   currentSession: CurrentSession | null;
-  onStartFlow: (goal: string) => void;
+  tags: Tag[]; // [NEW]
+  onCreateTag: (name: string) => string; // [NEW] Returns ID
+  onStartFlow: (goal: string, tagId?: string) => void;
   onEndFlow: () => void;
   notificationInterval: number;
   onSetNotificationInterval: (val: number) => void;
@@ -15,6 +18,8 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ 
   currentSession, 
+  tags,
+  onCreateTag,
   onStartFlow, 
   onEndFlow, 
   notificationInterval, 
@@ -23,7 +28,13 @@ export const Header: React.FC<HeaderProps> = ({
   onShowHelp
 }) => {
   const [goal, setGoal] = useState('');
+  const [tagName, setTagName] = useState(''); // Local tag input
+  const [isTagMenuOpen, setIsTagMenuOpen] = useState(false);
   const [dateStr, setDateStr] = useState('');
+  const tagInputRef = useRef<HTMLInputElement>(null);
+
+  // Active tags only
+  const activeTags = tags.filter(t => t.status === 'active');
 
   useEffect(() => {
     const d = new Date();
@@ -31,10 +42,33 @@ export const Header: React.FC<HeaderProps> = ({
     setDateStr(d.toLocaleDateString('en-US', options));
   }, []);
 
+  // Initialize tag name if valid session with tag
+  useEffect(() => {
+    if (currentSession?.tagId) {
+      const t = tags.find(tag => tag.id === currentSession.tagId);
+      if (t) setTagName(t.name);
+    } else if (!currentSession) {
+      // Keep previous tag name or clear? Users might want to continue same tag.
+      // Let's keep it for convenience.
+    }
+  }, [currentSession, tags]);
+
   const handleStart = () => {
     if (goal.trim()) {
-      onStartFlow(goal);
-      setGoal(''); // Clear input [TASK 1]
+      let tagId: string | undefined = undefined;
+      const cleanTagName = tagName.trim();
+
+      if (cleanTagName) {
+        const existing = activeTags.find(t => t.name.toLowerCase() === cleanTagName.toLowerCase());
+        if (existing) {
+          tagId = existing.id;
+        } else {
+          tagId = onCreateTag(cleanTagName);
+        }
+      }
+
+      onStartFlow(goal, tagId);
+      setGoal(''); 
     }
   };
 
@@ -54,7 +88,7 @@ export const Header: React.FC<HeaderProps> = ({
   const intervals = [1, 30, 45, 60, 75, 90, 105, 120, 135, 150];
 
   return (
-    <header className="flex flex-col gap-4 md:gap-6">
+    <header className="flex flex-col gap-4 md:gap-6 relative z-30">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="space-y-0.5 md:space-y-1">
           <p className="text-neutral-500 text-[10px] md:text-sm font-medium uppercase tracking-widest">{dateStr}</p>
@@ -100,6 +134,58 @@ export const Header: React.FC<HeaderProps> = ({
       </div>
 
       <div className="flex-1 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 md:gap-3 bg-neutral-900/50 p-1.5 rounded-lg border border-neutral-800">
+        
+        {/* Tag Input Section */}
+        <div className="relative group shrink-0 min-w-[120px] sm:max-w-[180px]">
+           <div className="flex items-center gap-2 px-3 py-2.5 sm:py-2 bg-neutral-950/50 rounded-md border border-transparent focus-within:border-neutral-700 transition-colors">
+             <Icon icon="lucide:tag" className={`w-3.5 h-3.5 ${tagName ? 'text-blue-500' : 'text-neutral-600'}`} />
+             <input
+                ref={tagInputRef}
+                type="text"
+                placeholder="Tag..."
+                value={tagName}
+                onChange={(e) => {
+                  setTagName(e.target.value);
+                  setIsTagMenuOpen(true);
+                }}
+                onFocus={() => setIsTagMenuOpen(true)}
+                onBlur={() => setTimeout(() => setIsTagMenuOpen(false), 200)}
+                disabled={!!currentSession}
+                className="w-full bg-transparent text-xs text-neutral-200 placeholder:text-neutral-600 focus:outline-none"
+             />
+           </div>
+
+           {/* Tag Suggestions Dropdown */}
+           <AnimatePresence>
+             {isTagMenuOpen && !currentSession && (
+               <motion.div
+                 initial={{ opacity: 0, y: 5 }}
+                 animate={{ opacity: 1, y: 0 }}
+                 exit={{ opacity: 0, y: 5 }}
+                 className="absolute top-full left-0 mt-1 w-full min-w-[160px] max-h-48 overflow-y-auto bg-neutral-900 border border-neutral-800 rounded-lg shadow-xl py-1 z-50 no-scrollbar"
+               >
+                 {activeTags.filter(t => t.name.toLowerCase().includes(tagName.toLowerCase())).map(t => (
+                   <button
+                     key={t.id}
+                     onClick={() => setTagName(t.name)}
+                     className="w-full text-left px-3 py-2 text-xs text-neutral-300 hover:bg-neutral-800 hover:text-white flex items-center justify-between group/item"
+                   >
+                     <span>{t.name}</span>
+                     <Icon icon="lucide:arrow-up-left" className="w-3 h-3 opacity-0 group-hover/item:opacity-50" />
+                   </button>
+                 ))}
+                 {tagName && !activeTags.some(t => t.name.toLowerCase() === tagName.toLowerCase()) && (
+                   <div className="px-3 py-2 text-xs text-neutral-500 border-t border-neutral-800/50 italic">
+                     Create "{tagName}"
+                   </div>
+                 )}
+               </motion.div>
+             )}
+           </AnimatePresence>
+        </div>
+
+        <div className="w-[1px] h-6 bg-neutral-800 hidden sm:block" />
+
         <input 
           type="text"
           placeholder="What will work when this ends?"

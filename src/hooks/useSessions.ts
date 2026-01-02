@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import { FlowSession, CurrentSession } from '../types';
+import { FlowSession, CurrentSession, FlowScore, Bottlenecks, Tag } from '../types';
 import { storageService } from '../services/storageService';
 import { dbService } from '../services/dbService';
 
 export const useSessions = () => {
   const [sessions, setSessions] = useState<FlowSession[]>([]);
+  const [tags, setTags] = useState<Tag[]>([]);
   const [currentSession, setCurrentSession] = useState<CurrentSession | null>(null);
   const [notificationInterval, setNotificationInterval] = useState(60);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -34,6 +35,17 @@ export const useSessions = () => {
         const fallback = storageService.loadSessionsFallback();
         setSessions(fallback);
       }
+      
+      // 3. Load Tags
+      const storedTags = localStorage.getItem('flow_tags');
+      if (storedTags) {
+        try {
+          setTags(JSON.parse(storedTags));
+        } catch (e) {
+          console.error("Failed to parse tags", e);
+        }
+      }
+      
       setIsLoaded(true);
     };
 
@@ -46,56 +58,96 @@ export const useSessions = () => {
     storageService.saveMeta({ currentSession, notificationInterval });
   }, [currentSession, notificationInterval, isLoaded]);
 
-  // Save Sessions on change
+  // Save Sessions and Tags on change
   useEffect(() => {
     if (!isLoaded) return;
     
-    // Async save to DB
+    // Async save sessions to DB
     dbService.saveAll(sessions).catch(e => console.error("DB save failed", e));
     
-    // Sync fallback save to LS
+    // Sync fallback save sessions to LS
     storageService.saveSessionsFallback(sessions);
-  }, [sessions, isLoaded]);
 
-  const handleStartFlow = (goal: string) => {
-    setCurrentSession({
+    // Save tags to LS
+    localStorage.setItem('flow_tags', JSON.stringify(tags));
+  }, [sessions, isLoaded, tags]);
+
+  const handleStartFlow = (goal: string, tagId?: string) => {
+    const newSession: CurrentSession = {
+      id: crypto.randomUUID(),
       goal,
-      startTime: Date.now()
-    });
+      startTime: Date.now(),
+      tagId
+    };
+    setCurrentSession(newSession);
   };
 
-  const handleCompleteSession = (data: Omit<FlowSession, 'id' | 'goal' | 'startTime' | 'endTime' | 'leadTimeMinutes'>) => {
+  const handleCompleteSession = (data: { 
+    flowScore: FlowScore; 
+    bottleneck: Bottlenecks; 
+    shipped: boolean;
+    interruptions: number;
+    notes: string;
+  }) => {
     if (!currentSession) return;
 
-    const endTime = Date.now();
-    const durationMs = endTime - currentSession.startTime;
-    const durationMin = Math.round(durationMs / 60000);
-
-    const newSession: FlowSession = {
+    const session: FlowSession = {
+      ...currentSession,
       ...data,
-      id: crypto.randomUUID(),
-      goal: currentSession.goal,
-      startTime: currentSession.startTime,
-      endTime: endTime,
-      leadTimeMinutes: durationMin,
+      endTime: Date.now(),
+      leadTimeMinutes: Math.floor((Date.now() - currentSession.startTime) / 60000)
     };
 
-    setSessions(prev => [newSession, ...prev]);
+    setSessions(prev => [session, ...prev]);
+    
+    // If shipped, mark tag as completed
+    if (data.shipped && currentSession.tagId) {
+      setTags(prev => prev.map(t => 
+        t.id === currentSession.tagId 
+          ? { ...t, status: 'completed', completedAt: session.endTime } 
+          : t
+      ));
+    }
+
     setCurrentSession(null);
+  };
+
+  const handleUpdateSession = (id: string, updates: Partial<FlowSession>) => {
+    setSessions(prev => prev.map(s => 
+      s.id === id ? { ...s, ...updates } : s
+    ));
+    
+    // We simplified tag completion logic: tags are only marked completed on "finish", not on edit.
+    // If a user retroactively marks a session as Shipped via edit, we could technically update the tag,
+    // but for now let's keep it simple as per plan.
   };
 
   const handleDeleteSession = (id: string) => {
     setSessions(prev => prev.filter(s => s.id !== id));
   };
 
+  const createTag = (name: string) => {
+    const newTag: Tag = {
+      id: crypto.randomUUID(),
+      name,
+      status: 'active',
+      createdAt: Date.now()
+    };
+    setTags(prev => [...prev, newTag]);
+    return newTag.id;
+  };
+
   return {
     sessions,
+    tags,
     currentSession,
     setCurrentSession,
     notificationInterval,
     setNotificationInterval,
     handleStartFlow,
     handleCompleteSession,
-    handleDeleteSession
+    handleUpdateSession,
+    handleDeleteSession,
+    createTag
   };
 };

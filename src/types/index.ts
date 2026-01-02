@@ -19,9 +19,20 @@ export interface FlowSession {
   leadTimeMinutes: number;
   bottleneck: Bottlenecks;
   notes?: string;
+  tagId?: string;
+}
+
+export interface Tag {
+  id: string;
+  name: string;
+  status: 'active' | 'completed';
+  createdAt: number;
+  completedAt?: number;
 }
 
 export interface CurrentSession {
+  id: string;
   goal: string;
   startTime: number;
+  tagId?: string;
 }

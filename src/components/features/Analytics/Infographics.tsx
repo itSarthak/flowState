@@ -24,69 +24,67 @@ export const Infographics: React.FC<InfographicsProps> = ({ sessions, filter, se
 
   const { stats, chartData } = useMemo(() => {
     const now = new Date();
-    let aggregatedData: { label: string; value: number; fullDate: string }[] = [];
+    let aggregatedData: { label: string; value: number; fullDate: string; avgScore: string }[] = [];
     let filteredSessions: FlowSession[] = [];
 
     // --- 1. Aggregation Logic ---
     if (filter === 'day') {
-      // LAST 7 DAYS (Current day on right)
-      // Iterate 6 -> 0
-      filteredSessions = sessions.filter(s => {
-         const t = new Date(s.endTime).getTime();
-         return t >= subDays(now, 7).getTime(); // Rough filter for performacne
-      });
-
+      // ... (Day logic)
       for (let i = 6; i >= 0; i--) {
         const d = subDays(now, i);
         const label = format(d, 'dd/MM/yy');
         
-        // Sum minutes for this day
-        const value = sessions
-          .filter(s => isSameDay(new Date(s.endTime), d))
-          .reduce((acc, s) => acc + s.leadTimeMinutes, 0);
+        const sessionsInBucket = sessions.filter(s => isSameDay(new Date(s.endTime), d));
+        const value = sessionsInBucket.reduce((acc, s) => acc + s.leadTimeMinutes, 0);
+        const avgScore = sessionsInBucket.length > 0 
+          ? (sessionsInBucket.reduce((acc, s) => acc + s.flowScore, 0) / sessionsInBucket.length).toFixed(1)
+          : '0';
 
-        aggregatedData.push({ label, value, fullDate: d.toDateString() });
+        aggregatedData.push({ label, value, fullDate: d.toDateString(), avgScore });
       }
 
     } else if (filter === 'week') {
-      // LAST 12 WEEKS
-      // Iterate 11 -> 0
+      // ... (Week logic)
       for (let i = 11; i >= 0; i--) {
         const d = subWeeks(now, i);
         const weekNum = getISOWeek(d);
         const label = `Week ${weekNum}`;
-        const start = startOfWeek(d, { weekStartsOn: 1 }); // Monday
+        const start = startOfWeek(d, { weekStartsOn: 1 });
         const end = endOfWeek(d, { weekStartsOn: 1 });
 
-        const value = sessions
-          .filter(s => {
-            const t = new Date(s.endTime).getTime();
-            return t >= start.getTime() && t <= end.getTime();
-          })
-          .reduce((acc, s) => acc + s.leadTimeMinutes, 0);
+        const sessionsInBucket = sessions.filter(s => {
+          const t = new Date(s.endTime).getTime();
+          return t >= start.getTime() && t <= end.getTime();
+        });
 
-        aggregatedData.push({ label, value, fullDate: `Week of ${format(start, 'dd MMM')}` });
+        const value = sessionsInBucket.reduce((acc, s) => acc + s.leadTimeMinutes, 0);
+        const avgScore = sessionsInBucket.length > 0 
+          ? (sessionsInBucket.reduce((acc, s) => acc + s.flowScore, 0) / sessionsInBucket.length).toFixed(1)
+          : '0';
+
+        aggregatedData.push({ label, value, fullDate: `Week of ${format(start, 'dd MMM')}`, avgScore });
       }
       
-      // Filter sessions for the stats cards (matches the chart range roughly)
       const twelveWeeksAgo = subWeeks(now, 12);
       filteredSessions = sessions.filter(s => new Date(s.endTime).getTime() >= twelveWeeksAgo.getTime());
 
     } else if (filter === 'month') {
-      // LAST 6 MONTHS
+      // ... (Month logic)
       for (let i = 5; i >= 0; i--) {
         const d = subMonths(now, i);
         const label = format(d, 'MMM yyyy');
-        const monthStart = startOfMonth(d);
         
-        const value = sessions
-          .filter(s => {
+        const sessionsInBucket = sessions.filter(s => {
              const t = new Date(s.endTime);
              return t.getMonth() === d.getMonth() && t.getFullYear() === d.getFullYear();
-          })
-          .reduce((acc, s) => acc + s.leadTimeMinutes, 0);
+        });
 
-        aggregatedData.push({ label, value, fullDate: label });
+        const value = sessionsInBucket.reduce((acc, s) => acc + s.leadTimeMinutes, 0);
+        const avgScore = sessionsInBucket.length > 0 
+          ? (sessionsInBucket.reduce((acc, s) => acc + s.flowScore, 0) / sessionsInBucket.length).toFixed(1)
+          : '0';
+
+        aggregatedData.push({ label, value, fullDate: label, avgScore });
       }
 
        const sixMonthsAgo = subMonths(now, 6);
@@ -226,9 +224,21 @@ export const Infographics: React.FC<InfographicsProps> = ({ sessions, filter, se
                />
                <Tooltip 
                   cursor={{ fill: '#262626', opacity: 0.4 }}
-                  contentStyle={{ backgroundColor: '#171717', borderColor: '#262626', borderRadius: '8px', fontSize: '12px' }}
-                  itemStyle={{ color: '#e5e5e5' }}
-                  labelStyle={{ color: '#a3a3a3', marginBottom: '4px' }}
+                  content={({ active, payload, label }) => {
+                    if (active && payload && payload.length) {
+                      const data = payload[0].payload;
+                      return (
+                        <div className="bg-neutral-900 border border-neutral-800 rounded-lg p-3 shadow-xl space-y-2">
+                          <div className="text-xs text-neutral-400 mb-1">{data.fullDate}</div>
+                          <div className="flex items-center gap-4">
+                            <span className="text-sm font-bold text-blue-400">{data.value} min</span>
+                            <span className="text-xs font-mono text-neutral-500">Avg Flow: {data.avgScore}</span>
+                          </div>
+                        </div>
+                      );
+                    }
+                    return null;
+                  }}
                />
                <Bar 
                   dataKey="value" 
@@ -250,9 +260,21 @@ export const Infographics: React.FC<InfographicsProps> = ({ sessions, filter, se
                   dy={10}
                />
                <Tooltip 
-                  contentStyle={{ backgroundColor: '#171717', borderColor: '#262626', borderRadius: '8px', fontSize: '12px' }}
-                  itemStyle={{ color: '#e5e5e5' }}
-                  labelStyle={{ color: '#a3a3a3', marginBottom: '4px' }}
+                  content={({ active, payload, label }) => {
+                    if (active && payload && payload.length) {
+                      const data = payload[0].payload;
+                      return (
+                        <div className="bg-neutral-900 border border-neutral-800 rounded-lg p-3 shadow-xl space-y-2">
+                          <div className="text-xs text-neutral-400 mb-1">{data.fullDate}</div>
+                          <div className="flex items-center gap-4">
+                            <span className="text-sm font-bold text-blue-400">{data.value} min</span>
+                            <span className="text-xs font-mono text-neutral-500">Avg Flow: {data.avgScore}</span>
+                          </div>
+                        </div>
+                      );
+                    }
+                    return null;
+                  }}
                />
                <Line 
                   type="monotone" 

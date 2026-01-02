@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { Icon } from '@iconify/react';
+import { FlowSession } from '@/src/types';
 
 // Hooks
 import { useSessions } from '@/src/hooks/useSessions';
@@ -16,30 +17,35 @@ import { ShippingPanel } from '@/src/components/features/Session/ShippingPanel';
 import { Timeline } from '@/src/components/features/Timeline/Timeline';
 import { BottleneckAnalysis } from '@/src/components/features/Analytics/BottleneckAnalysis';
 import { ActivityHeatmap } from '@/src/components/features/Analytics/ActivityHeatmap';
-import { Infographics } from '@/src/components/features/Analytics/Infographics';
+import { Infographics, AnalyticFilter } from '@/src/components/features/Analytics/Infographics';
 import { EndSessionDialog } from '@/src/components/ui/EndSessionDialog';
 import { ContextMenu } from '@/src/components/ui/ContextMenu';
 import { HelpModal } from '@/src/components/ui/HelpModal';
 import { WisdomModal } from '@/src/components/features/Wisdom/WisdomModal';
-
-import { AnalyticFilter } from '@/src/components/features/Analytics/Infographics';
+import { ShippingCycleAnalysis } from '@/src/components/features/Analytics/ShippingCycleAnalysis';
+import { EditSessionModal } from '@/src/components/ui/EditSessionModal';
 
 const App: React.FC = () => {
   const {
     sessions,
+    tags,
+    createTag,
     currentSession,
     notificationInterval,
     setNotificationInterval,
     handleStartFlow,
     handleCompleteSession,
+    handleUpdateSession,
     handleDeleteSession
   } = useSessions();
 
   const [filter, setFilter] = useState<AnalyticFilter>('week');
+  const [filterTag, setFilterTag] = useState<string | null>(null);
   const { activeDurationMinutes } = useTimer(currentSession, notificationInterval);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isWisdomOpen, setIsWisdomOpen] = useState(false);
+  const [editingSession, setEditingSession] = useState<FlowSession | null>(null);
   const [contextMenu, setContextMenu] = useState<{ x: number, y: number } | null>(null);
 
   // Tab Bar Title and Emoji logic
@@ -98,6 +104,8 @@ const App: React.FC = () => {
     >
       <Header 
         currentSession={currentSession} 
+        tags={tags}
+        onCreateTag={createTag}
         onStartFlow={handleStartFlow} 
         onEndFlow={() => setIsDialogOpen(true)}
         notificationInterval={notificationInterval}
@@ -124,11 +132,19 @@ const App: React.FC = () => {
       </div>
 
       <div className="mt-8 md:mt-12">
-        <Timeline sessions={sessions} onDelete={handleDeleteSession} />
+        <Timeline 
+          sessions={sessions} 
+          onDelete={handleDeleteSession} 
+          onEdit={setEditingSession}
+        />
+      </div>
+
+      <div className="mt-8 md:mt-12">
+        <Infographics sessions={sessions} filter={filter} setFilter={setFilter} />
       </div>
 
       <div className="mt-8 md:mt-12 pb-24">
-        <Infographics sessions={sessions} filter={filter} setFilter={setFilter} />
+        <ShippingCycleAnalysis sessions={sessions} tags={tags} />
       </div>
 
       <AnimatePresence>
@@ -141,11 +157,20 @@ const App: React.FC = () => {
             }} 
           />
         )}
+        {editingSession && (
+          <EditSessionModal 
+            session={editingSession}
+            tags={tags}
+            onCreateTag={createTag}
+            onClose={() => setEditingSession(null)}
+            onSave={handleUpdateSession}
+          />
+        )}
         {isHelpOpen && (
           <HelpModal onClose={() => setIsHelpOpen(false)} />
         )}
       </AnimatePresence>
-
+      
       {contextMenu && (
         <ContextMenu 
           x={contextMenu.x} 
