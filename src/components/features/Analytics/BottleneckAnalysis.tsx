@@ -1,14 +1,28 @@
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { FlowSession } from '../../../types';
+import { AnalyticFilter } from './Infographics';
 import { Icon } from '@iconify/react';
+import { subDays, subWeeks, subMonths } from 'date-fns';
 
 interface BottleneckAnalysisProps {
   sessions: FlowSession[];
+  filter: AnalyticFilter;
 }
 
-export const BottleneckAnalysis: React.FC<BottleneckAnalysisProps> = ({ sessions }) => {
-  const totals = sessions.reduce((acc, s) => {
+export const BottleneckAnalysis: React.FC<BottleneckAnalysisProps> = ({ sessions, filter }) => {
+  const filteredSessions = useMemo(() => {
+    const now = new Date();
+    return sessions.filter(s => {
+      const t = new Date(s.endTime).getTime();
+      if (filter === 'day') return t >= subDays(now, 7).getTime();
+      if (filter === 'week') return t >= subWeeks(now, 12).getTime();
+      if (filter === 'month') return t >= subMonths(now, 6).getTime();
+      return true;
+    });
+  }, [sessions, filter]);
+
+  const totals = filteredSessions.reduce((acc, s) => {
     acc.thinking += s.bottleneck.thinking;
     acc.coding += s.bottleneck.coding;
     acc.debugging += s.bottleneck.debugging;
@@ -17,7 +31,6 @@ export const BottleneckAnalysis: React.FC<BottleneckAnalysisProps> = ({ sessions
   }, { thinking: 0, coding: 0, debugging: 0, waiting: 0 });
 
   const totalPoints = totals.thinking + totals.coding + totals.debugging + totals.waiting || 1;
-  
   const getPercent = (val: number) => Math.round((val / totalPoints) * 100);
 
   const data = [

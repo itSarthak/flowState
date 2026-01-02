@@ -21,6 +21,8 @@ import { EndSessionDialog } from '@/src/components/ui/EndSessionDialog';
 import { ContextMenu } from '@/src/components/ui/ContextMenu';
 import { HelpModal } from '@/src/components/ui/HelpModal';
 
+import { AnalyticFilter } from '@/src/components/features/Analytics/Infographics';
+
 const App: React.FC = () => {
   const {
     sessions,
@@ -32,6 +34,7 @@ const App: React.FC = () => {
     handleDeleteSession
   } = useSessions();
 
+  const [filter, setFilter] = useState<AnalyticFilter>('week');
   const { activeDurationMinutes } = useTimer(currentSession, notificationInterval);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
@@ -110,7 +113,7 @@ const App: React.FC = () => {
       </div>
 
       <div className="mt-8 md:mt-12">
-        <BottleneckAnalysis sessions={sessions} />
+        <BottleneckAnalysis sessions={sessions} filter={filter} />
       </div>
 
       <div className="mt-8 md:mt-12">
@@ -118,7 +121,7 @@ const App: React.FC = () => {
       </div>
 
       <div className="mt-8 md:mt-12 pb-24">
-        <Infographics sessions={sessions} />
+        <Infographics sessions={sessions} filter={filter} setFilter={setFilter} />
       </div>
 
       <AnimatePresence>
