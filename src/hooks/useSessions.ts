@@ -116,10 +116,27 @@ export const useSessions = () => {
     setSessions(prev => prev.map(s => 
       s.id === id ? { ...s, ...updates } : s
     ));
-    
-    // We simplified tag completion logic: tags are only marked completed on "finish", not on edit.
-    // If a user retroactively marks a session as Shipped via edit, we could technically update the tag,
-    // but for now let's keep it simple as per plan.
+
+    // Handle retroactive shipping: If update includes shipped: true, mark tag as completed
+    if (updates.shipped) {
+       const session = sessions.find(s => s.id === id);
+       
+       // Determine the final tag ID for this session
+       // If 'tagId' is in updates, use it (could be undefined/null if removed)
+       // Otherwise, fallback to the session's existing tagId
+       let targetTagId = session?.tagId;
+       if ('tagId' in updates) {
+          targetTagId = updates.tagId;
+       }
+       
+       if (targetTagId) {
+         setTags(prev => prev.map(t => 
+           t.id === targetTagId 
+              ? { ...t, status: 'completed', completedAt: Date.now() } 
+              : t
+         ));
+       }
+    }
   };
 
   const handleDeleteSession = (id: string) => {

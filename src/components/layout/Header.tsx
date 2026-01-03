@@ -48,8 +48,7 @@ export const Header: React.FC<HeaderProps> = ({
       const t = tags.find(tag => tag.id === currentSession.tagId);
       if (t) setTagName(t.name);
     } else if (!currentSession) {
-      // Keep previous tag name or clear? Users might want to continue same tag.
-      // Let's keep it for convenience.
+      setTagName('');
     }
   }, [currentSession, tags]);
 
