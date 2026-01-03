@@ -71,7 +71,7 @@ export const ShippingCycleAnalysis: React.FC<ShippingCycleAnalysisProps> = ({ se
               key={tag.id}
               layout
               className={`rounded-lg border ${
-                tag.status === 'active' ? 'bg-neutral-900/40 border-neutral-800' : 'bg-neutral-950/30 border-neutral-900'
+                tag.status === 'active' ? 'bg-card border-border' : 'bg-muted/30 border-border'
               } overflow-hidden`}
             >
               <div 
@@ -118,7 +118,7 @@ export const ShippingCycleAnalysis: React.FC<ShippingCycleAnalysisProps> = ({ se
                     initial={{ height: 0 }}
                     animate={{ height: 'auto' }}
                     exit={{ height: 0 }}
-                    className="border-t border-neutral-800/50 bg-neutral-950/20"
+                    className="border-t border-border/50 bg-muted/20"
                   >
                     <div className="p-4 space-y-2">
                        <h4 className="text-[10px] uppercase font-bold text-neutral-600 mb-2">Session History</h4>
@@ -143,7 +143,7 @@ export const ShippingCycleAnalysis: React.FC<ShippingCycleAnalysisProps> = ({ se
           );
         })}
         {tags.length === 0 && (
-           <div className="p-8 text-center border border-dashed border-neutral-800 rounded-xl">
+           <div className="p-8 text-center border border-dashed border-border rounded-xl">
              <p className="text-neutral-500 text-sm">No tags created yet. Add a tag when starting a flow to track shipping cycles.</p>
            </div>
         )}

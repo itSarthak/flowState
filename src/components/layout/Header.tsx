@@ -14,6 +14,8 @@ interface HeaderProps {
   onSetNotificationInterval: (val: number) => void;
   onExport: () => void;
   onShowHelp: () => void;
+  theme: 'dark' | 'light';
+  onToggleTheme: (e: React.MouseEvent) => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({ 
@@ -25,7 +27,9 @@ export const Header: React.FC<HeaderProps> = ({
   notificationInterval, 
   onSetNotificationInterval,
   onExport,
-  onShowHelp
+  onShowHelp,
+  theme,
+  onToggleTheme
 }) => {
   const [goal, setGoal] = useState('');
   const [tagName, setTagName] = useState(''); // Local tag input
@@ -90,12 +94,12 @@ export const Header: React.FC<HeaderProps> = ({
     <header className="flex flex-col gap-4 md:gap-6 relative z-30">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="space-y-0.5 md:space-y-1">
-          <p className="text-neutral-500 text-[10px] md:text-sm font-medium uppercase tracking-widest">{dateStr}</p>
-          <h1 className="text-2xl md:text-3xl font-bold text-neutral-100 tracking-tight">Today</h1>
+          <p className="text-muted-foreground text-[10px] md:text-sm font-medium uppercase tracking-widest">{dateStr}</p>
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight">Today</h1>
         </div>
 
         <div className="flex items-center gap-2 md:gap-3 overflow-x-auto pb-1 md:pb-0 no-scrollbar">
-          <div className="flex items-center gap-2 px-2 md:px-3 py-1.5 bg-neutral-900/50 border border-neutral-800 rounded-md text-[9px] md:text-[10px] uppercase font-bold text-neutral-500 shrink-0">
+          <div className="flex items-center gap-2 px-2 md:px-3 py-1.5 bg-card border border-border rounded-md text-[9px] md:text-[10px] uppercase font-bold text-muted-foreground shrink-0">
             <button 
               onClick={() => {
                 handleTestNotification();
@@ -129,14 +133,27 @@ export const Header: React.FC<HeaderProps> = ({
           >
             <Icon icon="lucide:help-circle" className="w-4 h-4" />
           </button>
+          
+          <div className="w-px h-4 bg-neutral-800/50 mx-1" />
+
+          <button
+            onClick={onToggleTheme}
+            className="p-2 text-muted-foreground hover:text-foreground bg-card border border-border rounded-md transition-all shrink-0"
+            title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Mode`}
+          >
+             <Icon 
+               icon={theme === 'dark' ? "lucide:moon" : "lucide:sun"} 
+               className={`w-4 h-4 ${theme === 'dark' ? '' : 'text-amber-500'}`} 
+             />
+          </button>
         </div>
       </div>
 
-      <div className="flex-1 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 md:gap-3 bg-neutral-900/50 p-1.5 rounded-lg border border-neutral-800">
+      <div className="flex-1 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 md:gap-3 bg-card p-1.5 rounded-lg border border-border">
         
         {/* Tag Input Section */}
         <div className="relative group shrink-0 min-w-[120px] sm:max-w-[180px]">
-           <div className="flex items-center gap-2 px-3 py-2.5 sm:py-2 bg-neutral-950/50 rounded-md border border-transparent focus-within:border-neutral-700 transition-colors">
+           <div className="flex items-center gap-2 px-3 py-2.5 sm:py-2 bg-muted/50 rounded-md border border-transparent focus-within:border-border transition-colors">
              <Icon icon="lucide:tag" className={`w-3.5 h-3.5 ${tagName ? 'text-blue-500' : 'text-neutral-600'}`} />
              <input
                 ref={tagInputRef}
@@ -150,7 +167,7 @@ export const Header: React.FC<HeaderProps> = ({
                 onFocus={() => setIsTagMenuOpen(true)}
                 onBlur={() => setTimeout(() => setIsTagMenuOpen(false), 200)}
                 disabled={!!currentSession}
-                className="w-full bg-transparent text-xs text-neutral-200 placeholder:text-neutral-600 focus:outline-none"
+                className="w-full bg-transparent text-xs text-foreground placeholder:text-muted-foreground focus:outline-none"
              />
            </div>
 
@@ -183,7 +200,7 @@ export const Header: React.FC<HeaderProps> = ({
            </AnimatePresence>
         </div>
 
-        <div className="w-[1px] h-6 bg-neutral-800 hidden sm:block" />
+        <div className="w-[1px] h-6 bg-border hidden sm:block" />
 
         <input 
           type="text"
@@ -192,7 +209,7 @@ export const Header: React.FC<HeaderProps> = ({
           onChange={(e) => setGoal(e.target.value)}
           disabled={!!currentSession}
           onKeyDown={(e) => e.key === 'Enter' && handleStart()}
-          className="bg-transparent flex-1 px-3 py-2.5 sm:py-2 text-neutral-200 placeholder:text-neutral-600 focus:outline-none disabled:cursor-not-allowed text-sm md:text-base"
+          className="bg-transparent flex-1 px-3 py-2.5 sm:py-2 text-foreground placeholder:text-muted-foreground focus:outline-none disabled:cursor-not-allowed text-sm md:text-base"
         />
         {currentSession ? (
           <button 

@@ -21,13 +21,13 @@ export const ShippingPanel: React.FC<ShippingPanelProps> = ({ sessions }) => {
   const firstWin = todaySessions.length > 0 ? todaySessions[todaySessions.length - 1].leadTimeMinutes : 0;
 
   return (
-    <div className="p-6 rounded-xl border border-neutral-800 bg-neutral-900/30 space-y-4 h-48 flex flex-col justify-between">
+    <div className="p-6 rounded-xl border border-border bg-card/30 space-y-4 h-48 flex flex-col justify-between">
       <div className="flex items-center justify-between text-neutral-500">
         <span className="text-xs font-semibold uppercase tracking-wider">Shipping Panel</span>
         <Icon icon="lucide:ship" className="w-4 h-4 opacity-50" />
       </div>
 
-      <div className="grid grid-cols-3 divide-x divide-neutral-800">
+      <div className="grid grid-cols-3 divide-x divide-border">
         <Metric label="Shipped" value={shippedToday.toString()} subLabel="Today" />
         <Metric label="Lead Time" value={`${avgLeadTime}m`} subLabel="Avg" />
         <Metric label="First Win" value={`${firstWin}m`} subLabel="Today" />
@@ -38,7 +38,7 @@ export const ShippingPanel: React.FC<ShippingPanelProps> = ({ sessions }) => {
 
 const Metric = ({ label, value, subLabel }: { label: string; value: string; subLabel: string }) => (
   <div className="flex flex-col items-center first:pl-0 px-4 last:pr-0">
-    <span className="text-2xl font-bold mono text-neutral-100">{value}</span>
+    <span className="text-2xl font-bold mono text-foreground">{value}</span>
     <span className="text-[10px] text-neutral-500 uppercase tracking-tighter mt-1">{label} ({subLabel})</span>
   </div>
 );

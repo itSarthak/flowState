@@ -97,9 +97,70 @@ const App: React.FC = () => {
     }
   ];
 
+  // Theme State
+  const [theme, setTheme] = useState<'dark' | 'light'>(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('theme') as 'dark' | 'light' || 'dark';
+    }
+    return 'dark';
+  });
+
+  // Apply Theme
+  useEffect(() => {
+    const root = window.document.documentElement;
+    if (theme === 'dark') {
+      root.classList.add('dark');
+    } else {
+      root.classList.remove('dark');
+    }
+    localStorage.setItem('theme', theme);
+  }, [theme]);
+
+  // Circular View Transition
+  const toggleTheme = async (e: React.MouseEvent) => {
+    const newTheme = theme === 'dark' ? 'light' : 'dark';
+    
+    // @ts-ignore - View Transitions API
+    if (!document.startViewTransition) {
+      setTheme(newTheme);
+      return;
+    }
+
+    const x = e.clientX;
+    const y = e.clientY;
+    const endRadius = Math.hypot(
+      Math.max(x, innerWidth - x),
+      Math.max(y, innerHeight - y)
+    );
+
+    // @ts-ignore
+    const transition = document.startViewTransition(() => {
+      setTheme(newTheme);
+    });
+
+    transition.ready.then(() => {
+      const clipPath = [
+        `circle(0px at ${x}px ${y}px)`,
+        `circle(${endRadius}px at ${x}px ${y}px)`,
+      ];
+      document.documentElement.animate(
+        {
+          clipPath: clipPath,
+        },
+        {
+          duration: 400,
+          easing: 'ease-out',
+          pseudoElement: '::view-transition-new(root)',
+        }
+      );
+    });
+  };
+
+  // ... (context menu code)
+
   return (
     <div 
-      className="min-h-screen max-w-5xl mx-auto px-4 py-8 md:py-16 selection:bg-blue-500/30 relative"
+      className="min-h-screen max-w-5xl mx-auto px-4 py-8 md:py-16 selection:bg-white/80 selection:text-black relative"
       onContextMenu={handleGlobalContextMenu}
     >
       <Header 
@@ -112,6 +173,8 @@ const App: React.FC = () => {
         onSetNotificationInterval={setNotificationInterval}
         onExport={() => exportService.exportToJSON(sessions)}
         onShowHelp={() => setIsHelpOpen(true)}
+        theme={theme}
+        onToggleTheme={toggleTheme}
       />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 mt-8 md:mt-12">

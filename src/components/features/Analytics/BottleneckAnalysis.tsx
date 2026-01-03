@@ -41,7 +41,7 @@ export const BottleneckAnalysis: React.FC<BottleneckAnalysisProps> = ({ sessions
   ].sort((a, b) => b.value - a.value);
 
   return (
-    <div className="p-5 md:p-8 rounded-xl border border-neutral-800 bg-neutral-900/30">
+    <div className="p-5 md:p-8 rounded-xl border border-border bg-card/30">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 md:mb-8 text-neutral-500">
         <div className="flex items-center gap-2">
           <Icon icon="lucide:gauge" className="w-4 h-4" />
@@ -57,7 +57,7 @@ export const BottleneckAnalysis: React.FC<BottleneckAnalysisProps> = ({ sessions
               <span className="text-neutral-400 uppercase tracking-wide">{item.label}</span>
               <span className="text-neutral-500 mono">{item.percent}%</span>
             </div>
-            <div className="h-1.5 w-full bg-neutral-800 rounded-full overflow-hidden">
+            <div className="h-1.5 w-full bg-secondary rounded-full overflow-hidden">
               <div 
                 className="h-full bg-neutral-300 transition-all duration-500 ease-out" 
                 style={{ width: `${item.percent}%` }} 

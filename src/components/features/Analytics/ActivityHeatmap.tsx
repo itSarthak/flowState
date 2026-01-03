@@ -51,7 +51,7 @@ export const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({ sessions }) =>
   }, [sessions]);
 
   const intensityColors = [
-    'bg-neutral-800/30',    // 0
+    'bg-secondary',    // 0 - Theme aware (light grey on light, dark grey on dark)
     'bg-blue-500/20',     // 1
     'bg-blue-500/40',     // 2
     'bg-blue-500/70',     // 3
@@ -59,7 +59,7 @@ export const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({ sessions }) =>
   ];
 
   return (
-    <div className="p-6 rounded-xl border border-neutral-800 bg-neutral-900/30 space-y-6 overflow-hidden">
+    <div className="p-6 rounded-xl border border-border bg-card/30 space-y-6 overflow-hidden">
       <div className="flex items-center justify-between">
         <h3 className="text-xs font-semibold uppercase tracking-wider text-neutral-500">Activity Heatmap (365 Days)</h3>
         <div className="flex items-center gap-2">
@@ -93,7 +93,7 @@ export const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({ sessions }) =>
               transition={{ delay: i * 0.001 }}
               className={`w-3.5 h-3.5 md:w-3 md:h-3 rounded-sm transition-colors cursor-help relative group ${intensityColors[day.intensity]}`}
             >
-              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-neutral-950 border border-neutral-800 rounded text-[10px] text-neutral-200 whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none z-10 transition-opacity">
+              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-popover border border-border rounded text-[10px] text-popover-foreground shadow-xl whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none z-10 transition-opacity">
                 {day.date}: {day.minutes} min
               </div>
             </motion.div>

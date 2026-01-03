@@ -21,11 +21,11 @@ export const Timeline: React.FC<TimelineProps> = ({ sessions, onDelete, onEdit }
     const d = new Date(date);
     return (
       <div className="flex items-center gap-2 py-2 mt-4 mb-2">
-        <div className="h-px bg-neutral-800 flex-1" />
-        <span className="text-[10px] uppercase font-bold text-neutral-500 tracking-widest">
+        <div className="h-px bg-border flex-1" />
+        <span className="text-[10px] uppercase font-bold text-muted-foreground tracking-widest">
           {isToday(d) ? 'Today' : format(d, 'dd/MM/yy')}
         </span>
-        <div className="h-px bg-neutral-800 flex-1" />
+        <div className="h-px bg-border flex-1" />
       </div>
     );
   };
@@ -104,7 +104,7 @@ const TimelineItem = ({ session, onDelete, onEdit }: { session: FlowSession; onD
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0 }}
         transition={{ duration: 0.2, ease: "easeOut" }}
-        className="bg-neutral-900/40 border border-neutral-800 rounded-xl overflow-hidden hover:border-neutral-700 transition-colors cursor-pointer"
+        className="bg-card border border-border rounded-xl overflow-hidden hover:border-primary/50 transition-colors cursor-pointer"
         onClick={() => setIsExpanded(!isExpanded)}
       >
         <div className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 md:gap-4">
@@ -132,7 +132,7 @@ const TimelineItem = ({ session, onDelete, onEdit }: { session: FlowSession; onD
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="px-4 pb-4 border-t border-neutral-800 pt-4"
+            className="px-4 pb-4 border-t border-border pt-4"
           >
             <div className="flex flex-col md:flex-row md:items-center gap-6 mb-4">
               <div className="flex-1 grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -150,7 +150,7 @@ const TimelineItem = ({ session, onDelete, onEdit }: { session: FlowSession; onD
               </div>
             </div>
             {session.notes && (
-              <div className="bg-neutral-900/60 p-3 rounded border border-neutral-800/50">
+              <div className="bg-muted/50 p-3 rounded border border-border/50">
                  <p className="text-[10px] text-neutral-600 uppercase font-bold mb-1">Notes</p>
                  <p className="text-sm text-neutral-400 leading-relaxed italic">{session.notes}</p>
               </div>
