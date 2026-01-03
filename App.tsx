@@ -148,7 +148,7 @@ const App: React.FC = () => {
           clipPath: clipPath,
         },
         {
-          duration: 400,
+          duration: 750,
           easing: 'ease-out',
           pseudoElement: '::view-transition-new(root)',
         }

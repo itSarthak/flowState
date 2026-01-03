@@ -121,14 +121,14 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
           <button 
             onClick={onExport}
-            className="p-2 text-neutral-500 hover:text-white bg-neutral-900/50 border border-neutral-800 rounded-md transition-all shrink-0"
+            className="p-2 text-muted-foreground hover:text-foreground bg-card border border-border rounded-md transition-all shrink-0"
             title="Export Data"
           >
             <Icon icon="lucide:download" className="w-4 h-4" />
           </button>
           <button 
             onClick={onShowHelp}
-            className="p-2 text-neutral-500 hover:text-white bg-neutral-900/50 border border-neutral-800 rounded-md transition-all shrink-0"
+            className="p-2 text-muted-foreground hover:text-foreground bg-card border border-border rounded-md transition-all shrink-0"
             title="Help / Guide"
           >
             <Icon icon="lucide:help-circle" className="w-4 h-4" />
