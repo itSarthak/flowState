@@ -165,6 +165,8 @@ export const useSessions = () => {
     handleCompleteSession,
     handleUpdateSession,
     handleDeleteSession,
-    createTag
+    createTag,
+    setSessions,
+    setTags
   };
 };

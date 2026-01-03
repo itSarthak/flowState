@@ -29,6 +29,8 @@ const App: React.FC = () => {
   const {
     sessions,
     tags,
+    setSessions,
+    setTags,
     createTag,
     currentSession,
     notificationInterval,
@@ -38,6 +40,14 @@ const App: React.FC = () => {
     handleUpdateSession,
     handleDeleteSession
   } = useSessions();
+
+  const handleLoadMockData = () => {
+    import('./src/utils/mockData').then(({ generateMockData }) => {
+      const { sessions: mockSessions, tags: mockTags } = generateMockData();
+      setSessions(mockSessions);
+      setTags(mockTags);
+    });
+  };
 
   const [filter, setFilter] = useState<AnalyticFilter>('week');
   const [filterTag, setFilterTag] = useState<string | null>(null);
@@ -74,6 +84,11 @@ const App: React.FC = () => {
       label: currentSession ? 'End Flow Session' : 'Start Flow Session',
       icon: <Icon icon={currentSession ? "lucide:square" : "lucide:play"} className="w-4 h-4" />,
       onClick: () => currentSession ? setIsDialogOpen(true) : document.querySelector('input')?.focus()
+    },
+    {
+      label: 'Load Mock Data',
+      icon: <Icon icon="lucide:database" className="w-4 h-4" />,
+      onClick: handleLoadMockData
     },
     {
       label: 'Get Wisdom',

@@ -145,15 +145,15 @@ export const Infographics: React.FC<InfographicsProps> = ({ sessions, filter, se
         </div>
 
         <div className="flex items-center gap-2">
-           <div className="flex bg-neutral-950 p-1 rounded-md border border-neutral-800 shrink-0">
+           <div className="flex bg-muted/50 p-1 rounded-md border border-border shrink-0">
             {(['day', 'week', 'month'] as AnalyticFilter[]).map((f) => (
               <button
                 key={f}
                 onClick={() => setFilter(f)}
                 className={`px-3 py-1 rounded text-[9px] font-black uppercase tracking-tighter transition-all ${
                   filter === f 
-                    ? 'bg-neutral-800 text-white' 
-                    : 'text-neutral-500 hover:text-neutral-300'
+                    ? 'bg-background text-foreground shadow-sm' 
+                    : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
                 {f}
@@ -161,15 +161,15 @@ export const Infographics: React.FC<InfographicsProps> = ({ sessions, filter, se
             ))}
           </div>
 
-          <div className="flex bg-neutral-950 p-1 rounded-md border border-neutral-800 shrink-0">
+          <div className="flex bg-muted/50 p-1 rounded-md border border-border shrink-0">
             {(['line', 'bar'] as VizType[]).map((v) => (
               <button
                 key={v}
                 onClick={() => setVizType(v)}
                 className={`px-2 py-1 rounded transition-all ${
                   vizType === v 
-                    ? 'bg-neutral-800 text-white' 
-                    : 'text-neutral-500 hover:text-neutral-300'
+                    ? 'bg-background text-foreground shadow-sm' 
+                    : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
                 <Icon icon={v === 'line' ? 'lucide:trending-up' : 'lucide:bar-chart-2'} className="w-3.5 h-3.5" />
@@ -187,8 +187,8 @@ export const Infographics: React.FC<InfographicsProps> = ({ sessions, filter, se
           subLabel="In selected period" 
           tooltip={
             <div className="space-y-1">
-              <div className="flex justify-between gap-4"><span className="text-neutral-500">Average:</span> <span className="text-neutral-200 mono">{stats.average}m / bucket</span></div>
-              <div className="flex justify-between gap-4"><span className="text-neutral-500">Best:</span> <span className="text-neutral-200 mono">{stats.bestDay.value}m ({stats.bestDay.label})</span></div>
+              <div className="flex justify-between gap-4"><span className="text-muted-foreground">Average:</span> <span className="text-foreground mono">{stats.average}m / bucket</span></div>
+              <div className="flex justify-between gap-4"><span className="text-muted-foreground">Best:</span> <span className="text-foreground mono">{stats.bestDay.value}m ({stats.bestDay.label})</span></div>
             </div>
           }
         />
@@ -198,7 +198,7 @@ export const Infographics: React.FC<InfographicsProps> = ({ sessions, filter, se
           value={stats.avgScore} 
           subLabel="Flow Score" 
           tooltip={
-             <div className="flex justify-between gap-4"><span className="text-neutral-500">Sessions recorded:</span> <span className="text-neutral-200 mono">{stats.count}</span></div>
+             <div className="flex justify-between gap-4"><span className="text-muted-foreground">Sessions recorded:</span> <span className="text-foreground mono">{stats.count}</span></div>
           }
         />
         <MetricCard 
@@ -207,7 +207,7 @@ export const Infographics: React.FC<InfographicsProps> = ({ sessions, filter, se
           value={`${stats.shipRate}%`} 
           subLabel="Completion" 
           tooltip={
-             <div className="flex justify-between gap-4"><span className="text-neutral-500">Total Shipped:</span> <span className="text-neutral-200 mono">{stats.shippedCount} items</span></div>
+             <div className="flex justify-between gap-4"><span className="text-muted-foreground">Total Shipped:</span> <span className="text-foreground mono">{stats.shippedCount} items</span></div>
           }
         />
       </div>
