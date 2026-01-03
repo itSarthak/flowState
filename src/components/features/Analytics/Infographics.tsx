@@ -135,12 +135,12 @@ export const Infographics: React.FC<InfographicsProps> = ({ sessions, filter, se
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
          {/* ... Header ... */}
          <div className="flex items-center gap-3">
-          <div className="p-2 bg-neutral-800/50 rounded-lg border border-neutral-800">
-            <Icon icon="lucide:bar-chart-2" className="text-neutral-400 w-4 h-4" />
+          <div className="p-2 bg-muted/50 rounded-lg border border-border">
+            <Icon icon="lucide:bar-chart-2" className="text-muted-foreground w-4 h-4" />
           </div>
           <div>
-            <h2 className="text-xs font-semibold uppercase tracking-widest text-neutral-300">Performance Insights</h2>
-            <p className="text-[10px] text-neutral-600 font-bold uppercase">Analytics & Trends</p>
+            <h2 className="text-xs font-semibold uppercase tracking-widest text-foreground">Performance Insights</h2>
+            <p className="text-[10px] text-muted-foreground font-bold uppercase">Analytics & Trends</p>
           </div>
         </div>
 
@@ -212,7 +212,7 @@ export const Infographics: React.FC<InfographicsProps> = ({ sessions, filter, se
         />
       </div>
 
-      <div className="h-64 w-full bg-neutral-950/20 rounded-xl border border-neutral-800/50 p-4 relative">
+      <div className="h-64 w-full bg-muted/20 rounded-xl border border-border/50 p-4 relative">
         <ResponsiveContainer width="100%" height="100%">
           {vizType === 'bar' ? (
             <BarChart data={chartData}>
@@ -231,11 +231,11 @@ export const Infographics: React.FC<InfographicsProps> = ({ sessions, filter, se
                     if (active && payload && payload.length) {
                       const data = payload[0].payload;
                       return (
-                        <div className="bg-neutral-900 border border-neutral-800 rounded-lg p-3 shadow-xl space-y-2">
-                          <div className="text-xs text-neutral-400 mb-1">{data.fullDate}</div>
+                        <div className="bg-popover border border-border rounded-lg p-3 shadow-xl space-y-2">
+                          <div className="text-xs text-muted-foreground mb-1">{data.fullDate}</div>
                           <div className="flex items-center gap-4">
-                            <span className="text-sm font-bold text-blue-400">{data.value} min</span>
-                            <span className="text-xs font-mono text-neutral-500">Avg Flow: {data.avgScore}</span>
+                            <span className="text-sm font-bold text-blue-500">{data.value} min</span>
+                            <span className="text-xs font-mono text-muted-foreground">Avg Flow: {data.avgScore}</span>
                           </div>
                         </div>
                       );
@@ -267,11 +267,11 @@ export const Infographics: React.FC<InfographicsProps> = ({ sessions, filter, se
                     if (active && payload && payload.length) {
                       const data = payload[0].payload;
                       return (
-                        <div className="bg-neutral-900 border border-neutral-800 rounded-lg p-3 shadow-xl space-y-2">
-                          <div className="text-xs text-neutral-400 mb-1">{data.fullDate}</div>
+                        <div className="bg-popover border border-border rounded-lg p-3 shadow-xl space-y-2">
+                          <div className="text-xs text-muted-foreground mb-1">{data.fullDate}</div>
                           <div className="flex items-center gap-4">
-                            <span className="text-sm font-bold text-blue-400">{data.value} min</span>
-                            <span className="text-xs font-mono text-neutral-500">Avg Flow: {data.avgScore}</span>
+                            <span className="text-sm font-bold text-blue-500">{data.value} min</span>
+                            <span className="text-xs font-mono text-muted-foreground">Avg Flow: {data.avgScore}</span>
                           </div>
                         </div>
                       );
@@ -296,20 +296,20 @@ export const Infographics: React.FC<InfographicsProps> = ({ sessions, filter, se
 };
 
 const MetricCard = ({ icon, label, value, subLabel, tooltip }: { icon: string; label: string; value: string; subLabel: string; tooltip?: React.ReactNode }) => (
-  <div className="p-4 rounded-lg bg-neutral-900/40 border border-neutral-800 space-y-2 relative group cursor-help">
+  <div className="p-4 rounded-lg bg-card border border-border space-y-2 relative group cursor-help">
     <div className="flex items-center gap-2">
-      <Icon icon={icon} className="w-3.5 h-3.5 text-neutral-500" />
-      <span className="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">{label}</span>
+      <Icon icon={icon} className="w-3.5 h-3.5 text-muted-foreground" />
+      <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{label}</span>
     </div>
     <div className="flex flex-col">
-      <span className="text-2xl font-bold mono text-neutral-200">{value}</span>
-      <span className="text-[10px] text-neutral-600 font-medium">{subLabel}</span>
+      <span className="text-2xl font-bold mono text-foreground">{value}</span>
+      <span className="text-[10px] text-muted-foreground font-medium">{subLabel}</span>
     </div>
 
     {tooltip && (
-      <div className="absolute top-full left-0 mt-2 w-max min-w-[160px] p-3 bg-neutral-900 border border-neutral-800 rounded-lg shadow-xl opacity-0 group-hover:opacity-100 transition-opacity z-20 pointer-events-none">
-        <div className="text-[10px] uppercase font-bold text-neutral-600 mb-2 border-b border-neutral-800 pb-1">Details</div>
-        <div className="text-xs text-neutral-300">{tooltip}</div>
+      <div className="absolute top-full left-0 mt-2 w-max min-w-[160px] p-3 bg-popover border border-border rounded-lg shadow-xl opacity-0 group-hover:opacity-100 transition-opacity z-20 pointer-events-none">
+        <div className="text-[10px] uppercase font-bold text-muted-foreground mb-2 border-b border-border pb-1">Details</div>
+        <div className="text-xs text-foreground">{tooltip}</div>
       </div>
     )}
   </div>

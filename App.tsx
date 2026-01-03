@@ -160,7 +160,7 @@ const App: React.FC = () => {
 
   return (
     <div 
-      className="min-h-screen max-w-5xl mx-auto px-4 py-8 md:py-16 selection:bg-white/80 selection:text-black relative"
+      className="min-h-screen max-w-5xl mx-auto px-4 py-8 md:py-16 relative"
       onContextMenu={handleGlobalContextMenu}
     >
       <Header 
