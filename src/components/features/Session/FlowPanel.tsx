@@ -11,7 +11,7 @@ interface FlowPanelProps {
 
 export const FlowPanel: React.FC<FlowPanelProps> = ({ isActive, duration, lastFlowScore }) => {
   return (
-    <div className="p-6 rounded-xl border border-border bg-card/30 flex flex-col justify-between h-48 group">
+    <div className="p-6 rounded-xl border border-border bg-card/30 flex flex-col justify-between h-48 group hover:border-primary/50 transition-colors">
       <div className="flex items-center justify-between text-neutral-500">
         <span className="text-xs font-semibold uppercase tracking-wider">Flow Panel</span>
         <Icon icon="lucide:brain" className="w-4 h-4 opacity-50 group-hover:opacity-100 transition-opacity" />

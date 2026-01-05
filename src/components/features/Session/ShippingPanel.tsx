@@ -21,7 +21,7 @@ export const ShippingPanel: React.FC<ShippingPanelProps> = ({ sessions }) => {
   const firstWin = todaySessions.length > 0 ? todaySessions[todaySessions.length - 1].leadTimeMinutes : 0;
 
   return (
-    <div className="p-6 rounded-xl border border-border bg-card/30 space-y-4 h-48 flex flex-col justify-between">
+    <div className="p-6 rounded-xl border border-border bg-card/30 space-y-4 h-48 flex flex-col justify-between hover:border-primary/50 transition-colors">
       <div className="flex items-center justify-between text-neutral-500">
         <span className="text-xs font-semibold uppercase tracking-wider">Shipping Panel</span>
         <Icon icon="lucide:ship" className="w-4 h-4 opacity-50" />

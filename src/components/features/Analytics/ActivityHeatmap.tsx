@@ -59,7 +59,7 @@ export const ActivityHeatmap: React.FC<ActivityHeatmapProps> = ({ sessions }) =>
   ];
 
   return (
-    <div className="p-6 rounded-xl border border-border bg-card/30 space-y-6 overflow-hidden">
+    <div className="p-6 rounded-xl border border-border bg-card/30 space-y-6 overflow-hidden hover:border-primary/50 transition-colors">
       <div className="flex items-center justify-between">
         <h3 className="text-xs font-semibold uppercase tracking-wider text-neutral-500">Activity Heatmap (365 Days)</h3>
         <div className="flex items-center gap-2">

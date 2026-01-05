@@ -41,7 +41,7 @@ export const BottleneckAnalysis: React.FC<BottleneckAnalysisProps> = ({ sessions
   ].sort((a, b) => b.value - a.value);
 
   return (
-    <div className="p-5 md:p-8 rounded-xl border border-border bg-card/30">
+    <div className="p-5 md:p-8 rounded-xl border border-border bg-card/30 hover:border-primary/50 transition-colors">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 md:mb-8 text-neutral-500">
         <div className="flex items-center gap-2">
           <Icon icon="lucide:gauge" className="w-4 h-4" />

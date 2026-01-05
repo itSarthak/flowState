@@ -131,7 +131,7 @@ export const Infographics: React.FC<InfographicsProps> = ({ sessions, filter, se
   }, [sessions, filter]);
 
   return (
-    <div className="p-5 md:p-8 rounded-xl border border-border bg-card/30 space-y-8">
+    <div className="p-5 md:p-8 rounded-xl border border-border bg-card/30 space-y-8 hover:border-primary/50 transition-colors">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
          {/* ... Header ... */}
          <div className="flex items-center gap-3">
@@ -296,7 +296,7 @@ export const Infographics: React.FC<InfographicsProps> = ({ sessions, filter, se
 };
 
 const MetricCard = ({ icon, label, value, subLabel, tooltip }: { icon: string; label: string; value: string; subLabel: string; tooltip?: React.ReactNode }) => (
-  <div className="p-4 rounded-lg bg-card border border-border space-y-2 relative group cursor-help">
+  <div className="p-4 rounded-lg bg-card border border-border space-y-2 relative group cursor-help hover:border-primary/50 transition-colors">
     <div className="flex items-center gap-2">
       <Icon icon={icon} className="w-3.5 h-3.5 text-muted-foreground" />
       <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">{label}</span>

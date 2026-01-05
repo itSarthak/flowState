@@ -72,7 +72,7 @@ export const ShippingCycleAnalysis: React.FC<ShippingCycleAnalysisProps> = ({ se
               layout
               className={`rounded-lg border ${
                 tag.status === 'active' ? 'bg-card border-border' : 'bg-muted/30 border-border'
-              } overflow-hidden`}
+              } overflow-hidden hover:border-primary/50 transition-all`}
             >
               <div 
                 onClick={() => setExpandedTagId(isExpanded ? null : tag.id)}
