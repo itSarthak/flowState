@@ -82,12 +82,13 @@ const TimelineItem = ({ session, onDelete, onEdit }: { session: FlowSession; onD
     setContextMenu({ x: e.clientX, y: e.clientY });
   };
 
-  const menuItems = [
+  const menuItems: any[] = [
     {
       label: 'Edit Session',
       icon: <Icon icon="lucide:edit-3" className="w-4 h-4" />,
       onClick: () => onEdit(session),
     },
+    { type: 'divider' },
     {
       label: 'Delete Session',
       icon: <Icon icon="lucide:trash-2" className="w-4 h-4" />,

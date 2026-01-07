@@ -3,10 +3,11 @@ import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 
 interface ContextMenuItem {
-  label: string;
+  label?: string;
   icon?: React.ReactNode;
-  onClick: () => void;
+  onClick?: () => void;
   variant?: 'default' | 'danger';
+  type?: 'item' | 'divider';
 }
 
 interface ContextMenuProps {
@@ -45,21 +46,25 @@ export const ContextMenu: React.FC<ContextMenuProps> = ({ x, y, onClose, items }
         className="fixed z-[999] bg-[#111] border border-neutral-800 rounded-lg shadow-2xl p-1 w-48 overflow-hidden"
       >
         {items.map((item, idx) => (
-          <button
-            key={idx}
-            onClick={() => {
-              item.onClick();
-              onClose();
-            }}
-            className={`w-full flex items-center gap-2 px-3 py-2 text-xs font-medium rounded-md transition-colors ${
-              item.variant === 'danger' 
-                ? 'text-red-400 hover:bg-red-500/10' 
-                : 'text-neutral-300 hover:bg-neutral-800 hover:text-white'
-            }`}
-          >
-            {item.icon}
-            {item.label}
-          </button>
+          item.type === 'divider' ? (
+            <div key={idx} className="h-px bg-neutral-800 my-1 mx-1" />
+          ) : (
+            <button
+              key={idx}
+              onClick={() => {
+                item.onClick?.();
+                onClose();
+              }}
+              className={`w-full flex items-center gap-2 px-3 py-2 text-xs font-medium rounded-md transition-colors ${
+                item.variant === 'danger' 
+                  ? 'text-red-400 hover:bg-red-500/10' 
+                  : 'text-neutral-300 hover:bg-neutral-800 hover:text-white'
+              }`}
+            >
+              {item.icon}
+              {item.label}
+            </button>
+          )
         ))}
       </motion.div>
     </AnimatePresence>,

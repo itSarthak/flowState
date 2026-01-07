@@ -69,12 +69,13 @@ const App: React.FC = () => {
     setContextMenu({ x: e.clientX, y: e.clientY });
   };
 
-  const menuItems = [
+  const menuItems: any[] = [
     {
       label: currentSession ? 'End Flow Session' : 'Start Flow Session',
       icon: <Icon icon={currentSession ? "lucide:square" : "lucide:play"} className="w-4 h-4" />,
       onClick: () => currentSession ? setIsDialogOpen(true) : document.querySelector('input')?.focus()
     },
+    { type: 'divider' },
     {
       label: 'Get Wisdom',
       icon: <Icon icon="lucide:sparkles" className="w-4 h-4" />,
@@ -85,6 +86,7 @@ const App: React.FC = () => {
       icon: <Icon icon="lucide:help-circle" className="w-4 h-4" />,
       onClick: () => setIsHelpOpen(true)
     },
+    { type: 'divider' },
     {
       label: 'Download Data (JSON)',
       icon: <Icon icon="lucide:file-json" className="w-4 h-4" />,
